@@ -6,7 +6,7 @@ const fetchusers = (req, res, next) => {
     let authToken = req.header("Authorization");
     authToken = authToken.substring(7);
     if(!authToken) {
-        res.status(401).send({error: "Please authenticate using a valid token"});
+        return res.status(401).send({error: "Please authenticate using a valid token"});
     }
 
     try {
@@ -15,7 +15,7 @@ const fetchusers = (req, res, next) => {
         next();
     }
     catch(error) {
-        res.status(401).send({error: "Please authenticate using a valid token"});
+        return res.status(401).send({error: "Please authenticate using a valid token"});
     }
 }
 

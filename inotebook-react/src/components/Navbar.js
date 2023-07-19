@@ -1,33 +1,45 @@
-import React from 'react'
-import { Link, useLocation} from 'react-router-dom'
+import React, { useContext } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import AuthContext from '../context/auth/AuthContext';
 
 const Navbar = () => {
 
     let location = useLocation();
 
+    const navigate = useNavigate();
+
+    const authValue = useContext(AuthContext);
+
     const isActive = (path) => {
         return location.pathname === path ? ' active' : '';
+    }
+
+    const handleLogout = () => {
+        console.log("handleLogout called");
+        authValue.updateAuth(false, "");
+        navigate("/login");
     }
 
     return (
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
-                <Link className="navbar-brand" to="/">iNotebook</Link>
+                <Link className="navbar-brand ms-1" to="/">iNotebook</Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
-                            <Link className={`nav-link${isActive("/")}`} aria-current="page" to="/">Home</Link>
+                            { authValue.auth.isAuthenticated && <Link className={`nav-link${isActive("/")}`} aria-current="page" to="/">Home</Link> }
                         </li>
                         <li className="nav-item">
-                            <Link className={`nav-link${isActive("/about")}`} to="/about">About</Link>
+                            { authValue.auth.isAuthenticated && <Link className={`nav-link${isActive("/about")}`} to="/about">About</Link> }
                         </li>
                     </ul>
                     <form className="d-flex" role="search">
-                        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                        <button className="btn btn-outline-success" type="submit">Search</button>
+                        {location.pathname === "/signup" && <button type="button" className="btn btn-primary" onClick={() => navigate("/login")}>Login</button>}
+                        { location.pathname === "/login" && <button type="button" className="btn btn-primary" onClick={() => navigate("/signup")}>Signup</button>}
+                        { authValue.auth.isAuthenticated && <button type="button" className="btn btn-primary" onClick={handleLogout}>Logout</button>}
                     </form>
                 </div>
             </div>
