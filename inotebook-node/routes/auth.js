@@ -79,7 +79,7 @@ router.post('/login', [
 
         const authToken = jwt.sign(data, JWT_SECRET);
 
-        return res.status(200).json({ authToken })
+        return res.status(200).json({ authToken, user})
     }
     catch (error) {
         return res.status(500).json({error: await generateResponse(null, null, "Internal Server Error", null, null)});

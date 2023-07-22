@@ -2,13 +2,13 @@ import { useContext, useState } from "react";
 import NoteContext from "./NoteContext";
 import WebServiceInvokerRest from "../../util/WebServiceInvokerRest";
 import AlertContext from "../alert/AlertContext";
-import AuthContext from "../auth/AuthContext";
+import { useSelector } from "react-redux";
 
 const NoteState = (props) => {
 
-    const authValue = useContext(AuthContext);
+    const auth = useSelector((state) => state.auth);
 
-    const authToken = authValue.auth.authToken;
+    const authToken = auth.authToken;
 
     const alertValue = useContext(AlertContext);
 

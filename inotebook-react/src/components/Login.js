@@ -2,7 +2,8 @@ import React, { useContext, useState } from 'react'
 import WebServiceInvokerRest from '../util/WebServiceInvokerRest';
 import AlertContext from '../context/alert/AlertContext';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../context/auth/AuthContext';
+import { useDispatch } from 'react-redux';
+import { updateAuth } from '../redux/slices/AuthSlice';
 
 const Login = () => {
 
@@ -15,7 +16,7 @@ const Login = () => {
 
     const navigate = useNavigate();
 
-    const authValue = useContext(AuthContext);
+    const dispatch = useDispatch();
 
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
@@ -27,7 +28,7 @@ const Login = () => {
         console.log(response);
         if(response.status === 200) {
             //redirect
-            authValue.updateAuth(true, response.data.authToken)
+            dispatch(updateAuth({type: "LoggedIn", state: {username: response.data.user.name, authToken: response.data.authToken}}))
             navigate("/")
         }
         else {

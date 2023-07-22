@@ -3,7 +3,7 @@ import NoteItem from './NoteItem'
 import NoteContext from '../context/notes/NoteContext'
 import AddNote from './AddNote';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../context/auth/AuthContext';
+import { useSelector } from 'react-redux';
 
 const Notes = () => {
 
@@ -11,13 +11,13 @@ const Notes = () => {
 
     const navigate = useNavigate();
 
-    const authValue = useContext(AuthContext);
+    const auth = useSelector((state) => state.auth);
 
     useEffect(() => {
-        if(authValue.auth.isAuthenticated) {
+        if(auth.isAuthenticated) {
             noteValue.fetchallnotes();
         }
-        else { 
+        else {
             navigate("/login");
         }
         // eslint-disable-next-line

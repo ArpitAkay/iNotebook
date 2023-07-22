@@ -1,6 +1,7 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import AuthContext from '../context/auth/AuthContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateAuth } from '../redux/slices/AuthSlice';
 
 const Navbar = () => {
 
@@ -8,7 +9,9 @@ const Navbar = () => {
 
     const navigate = useNavigate();
 
-    const authValue = useContext(AuthContext);
+    const dispatch = useDispatch();
+
+    const auth = useSelector((state) => state.auth)
 
     const isActive = (path) => {
         return location.pathname === path ? ' active' : '';
@@ -16,7 +19,7 @@ const Navbar = () => {
 
     const handleLogout = () => {
         console.log("handleLogout called");
-        authValue.updateAuth(false, "");
+        dispatch(updateAuth({type: "LoggedOut", state: {authToken: ""}}))
         navigate("/login");
     }
 
@@ -30,16 +33,16 @@ const Navbar = () => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
-                            { authValue.auth.isAuthenticated && <Link className={`nav-link${isActive("/")}`} aria-current="page" to="/">Home</Link> }
+                            { auth.isAuthenticated && <Link className={`nav-link${isActive("/")}`} aria-current="page" to="/">Home</Link> }
                         </li>
                         <li className="nav-item">
-                            { authValue.auth.isAuthenticated && <Link className={`nav-link${isActive("/about")}`} to="/about">About</Link> }
+                            { auth.isAuthenticated && <Link className={`nav-link${isActive("/about")}`} to="/about">About</Link> }
                         </li>
                     </ul>
                     <form className="d-flex" role="search">
                         {location.pathname === "/signup" && <button type="button" className="btn btn-primary" onClick={() => navigate("/login")}>Login</button>}
                         { location.pathname === "/login" && <button type="button" className="btn btn-primary" onClick={() => navigate("/signup")}>Signup</button>}
-                        { authValue.auth.isAuthenticated && <button type="button" className="btn btn-primary" onClick={handleLogout}>Logout</button>}
+                        { auth.isAuthenticated && <button type="button" className="btn btn-primary" onClick={handleLogout}>Logout</button>}
                     </form>
                 </div>
             </div>
